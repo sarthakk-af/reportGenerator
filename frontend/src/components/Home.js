@@ -125,6 +125,7 @@ const Home = () => {
                 eventPOC: '',
                 id: ''
             });
+            setSelectedData(null);
         } catch (error) {
             console.error("Error deleting data:", error);
             alert("Failed to delete data. Please try again.");
@@ -178,41 +179,41 @@ const Home = () => {
             alert('No data selected to create report of!');
             return;
         }
-        
+
         // Generate the summary
         // const summary = await generateSummary(data.eventDescription);
-        
+
         const doc = new jsPDF();
-        
+
         // Cover Page
         doc.setFillColor(230, 230, 250); // Light purple background
         doc.rect(0, 0, doc.internal.pageSize.getWidth(), doc.internal.pageSize.getHeight(), 'F');
-        
+
         // Add a cover image if available
         // const imgData = 'data:image/jpeg;base64,...'; // Replace with your image data
         // doc.addImage(imgData, 'JPEG', 10, 10, 190, 100); // Adjust positioning and size as needed
-        
+
         doc.setFontSize(26);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(50, 50, 150); // Dark Blue Color
         doc.text('Event Report', doc.internal.pageSize.getWidth() / 2, 50, { align: 'center' });
-        
+
         doc.setFontSize(18);
         doc.setFont('helvetica', 'italic');
         doc.setTextColor(0, 102, 102); // Teal Color for subheadings
         doc.text(`Event Name: ${data.eventName}`, doc.internal.pageSize.getWidth() / 2, 80, { align: 'center' });
         doc.text(`Date: ${data.eventDate}`, doc.internal.pageSize.getWidth() / 2, 90, { align: 'center' });
         doc.text(`Venue: ${data.eventVenue}`, doc.internal.pageSize.getWidth() / 2, 100, { align: 'center' });
-        
+
         // Adding a special note for corporate events
         if (data.eventType === 'Corporate') {
             doc.setFontSize(16);
             doc.setTextColor(0, 0, 255);
             doc.text('Note: This report is generated for a corporate event.', 10, 120);
         }
-        
+
         doc.addPage(); // Add new page for details
-        
+
         // Header for Details Page
         doc.setFillColor(200, 200, 255); // Light blue background for header
         doc.rect(0, 0, doc.internal.pageSize.getWidth(), 20, 'F');
@@ -220,16 +221,16 @@ const Home = () => {
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(50, 50, 150);
         doc.text('Event Details', 10, 15);
-        
+
         doc.setLineWidth(0.5);
         doc.line(10, 22, 200, 22);
-        
+
         // Table for Event Details
         const tableWidth = 180;
         const marginLeft = 10;
         const marginTop = 30;
         const rowHeight = 10;
-        
+
         // Header Row
         doc.setFontSize(16);
         doc.setFont('helvetica', 'bold');
@@ -238,47 +239,47 @@ const Home = () => {
         doc.rect(marginLeft, marginTop, tableWidth, rowHeight, 'F'); // Header background
         doc.setTextColor(0, 0, 0);
         doc.text('Event Information', marginLeft + 5, marginTop + 7);
-        
+
         // Detail Rows
         doc.setFont('helvetica', 'normal');
         doc.setTextColor(0, 0, 0);
-        
+
         const details = [
             { label: 'Event Name', value: data.eventName },
             { label: 'Event Date', value: data.eventDate },
             { label: 'Event Venue', value: data.eventVenue }
         ];
-        
+
         details.forEach((detail, index) => {
             doc.rect(marginLeft, marginTop + (rowHeight * (index + 1)), tableWidth, rowHeight); // Draw row border
             doc.text(`${detail.label}:`, marginLeft + 5, marginTop + (rowHeight * (index + 1)) + 7);
             doc.text(detail.value, marginLeft + 80, marginTop + (rowHeight * (index + 1)) + 7);
         });
-        
+
         // Description with bullet points
         doc.text('Event Description:', marginLeft, marginTop + (rowHeight * (details.length + 1)) + 10);
         const descriptionLines = doc.splitTextToSize(data.eventDescription, 180);
         descriptionLines.forEach((line, index) => {
             doc.text(`• ${line}`, marginLeft, marginTop + (rowHeight * (details.length + 1)) + 20 + index * 10);
         });
-        
+
         // If the event is a large event, add a congratulatory note
         if (data.attendees && data.attendees.length > 100) {
             doc.setFontSize(14);
             doc.setTextColor(0, 100, 0);
             doc.text('Congratulations on organizing a successful large event!', marginLeft, marginTop + (rowHeight * (details.length + 1)) + 20 + descriptionLines.length * 10 + 10);
         }
-        
+
         // Footer with page numbers
         doc.setFontSize(12);
         doc.setTextColor(100);
         doc.text(`Point of Contact: ${data.eventPOC}`, marginLeft, doc.internal.pageSize.getHeight() - 20);
-        
+
         doc.setFontSize(10);
         doc.text(`Page ${doc.internal.getNumberOfPages()}`, doc.internal.pageSize.getWidth() - 20, doc.internal.pageSize.getHeight() - 10);
-        
+
         doc.save(`${data.eventName}_report.pdf`);
-        
+
         // Reset form data
         setData({
             eventName: '',
@@ -288,8 +289,9 @@ const Home = () => {
             eventPOC: '',
             id: ''
         });
+        setSelectedData(null);
     };
-    
+
     return (
         <div style={{ padding: '20px', backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
             <h1 style={{ textAlign: 'center', color: '#4CAF50', fontFamily: 'Arial, sans-serif', marginBottom: '30px' }}>REPORT GENERATOR</h1>
