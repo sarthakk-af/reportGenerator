@@ -78,6 +78,7 @@ const Home = () => {
     };
 
     const handleUpdate = async () => {
+        
         if (!data.eventName || !data.eventDate || !data.eventVenue || !data.eventDescription) {
             alert('Please fill all required fields');
             return;
@@ -89,7 +90,7 @@ const Home = () => {
             eventDescription: data.eventDescription,
             eventPOC: data.eventPOC
         };
-
+        
         const res = await UpdateRg(data.id, body);
         console.log('response', res);
         fetchRg();
@@ -106,6 +107,8 @@ const Home = () => {
     };
 
     const handleDelete = async () => {
+        if (window.confirm('Are you sure you want to delete this event?'))
+
         if (!selectedData) {
             alert('No data selected to delete!');
             return;
