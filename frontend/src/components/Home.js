@@ -78,7 +78,7 @@ const Home = () => {
     };
 
     const handleUpdate = async () => {
-        
+
         if (!data.eventName || !data.eventDate || !data.eventVenue || !data.eventDescription) {
             alert('Please fill all required fields');
             return;
@@ -90,7 +90,7 @@ const Home = () => {
             eventDescription: data.eventDescription,
             eventPOC: data.eventPOC
         };
-        
+
         const res = await UpdateRg(data.id, body);
         console.log('response', res);
         fetchRg();
@@ -109,10 +109,10 @@ const Home = () => {
     const handleDelete = async () => {
         if (window.confirm('Are you sure you want to delete this event?'))
 
-        if (!selectedData) {
-            alert('No data selected to delete!');
-            return;
-        }
+            if (!selectedData) {
+                alert('No data selected to delete!');
+                return;
+            }
 
         try {
             const res = await deleteRg(selectedData._id);
@@ -295,9 +295,16 @@ const Home = () => {
         setSelectedData(null);
     };
 
+    const handleLogout = () => {
+        alert('You have been logged out');
+        window.location.href = '/';
+    };
+
     return (
         <div style={{ padding: '20px', backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
             <h1 style={{ textAlign: 'center', color: '#4CAF50', fontFamily: 'Arial, sans-serif', marginBottom: '30px' }}>REPORT GENERATOR</h1>
+
+
 
             <div style={{ padding: '30px', display: 'flex', flexWrap: 'wrap', gap: '20px', justifyContent: 'center' }} >
 
@@ -370,6 +377,8 @@ const Home = () => {
                     />
                 </div>
 
+
+
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '30px', gap: '10px' }}>
@@ -433,6 +442,16 @@ const Home = () => {
                 >
                     Delete
                 </button>
+                <button
+                    onClick={handleLogout}
+                    style={{ backgroundColor: '#000000', color: 'white', padding: '12px 24px', borderRadius: '8px', border: 'none', cursor: 'pointer', boxShadow: '0 4px 8px rgba(0,0,0,0.2)', transition: 'background-color 0.3s, transform 0.3s' }}
+                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#e53935'}
+                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#000000'}
+                    onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.98)'}
+                    onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                >
+                    Logout
+                </button>
             </div>
 
             {showData && (
@@ -455,6 +474,8 @@ const Home = () => {
                     ))}
                 </div>
             )}
+
+
         </div>
     );
 }
